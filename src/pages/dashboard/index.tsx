@@ -1,7 +1,7 @@
-import { Header } from "../components/Header";
+import { Header } from "../../components/Header";
 import dynamic from 'next/dynamic'
 import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
-import { Sidebar } from "../components/Sidebar";
+import { Sidebar } from "../../components/Sidebar";
 import { theme } from "@chakra-ui/react";
 
 const Chart = dynamic(() => import('react-apexcharts'),{ssr: false} )
@@ -76,6 +76,7 @@ export default function Dashboard(){
                          borderRadius={8}
                     >
                         <Text fontSize="lg" mb="4">Taxa de abertura</Text>
+                        <Chart options={options} series={series} type="area" height={160} />
                     </Box>                   
                     
                 </SimpleGrid>
