@@ -30,7 +30,6 @@ const options = {
             '21-mar',
             '22-mar',
             '23-mar',
-            '24-mar',
         ]
     },
     fill: {
@@ -46,7 +45,7 @@ const options = {
 }
 
 const series = [
-    {name: "Series 1", data: [10,13,18,15,22,13,25 ]}
+    {name: "Series 1", data: [10,13,18,15,22,13 ]}
 ]
 
 export default function Dashboard(){

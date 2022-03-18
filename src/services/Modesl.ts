@@ -13,6 +13,7 @@ export type GetUsersResponse = {
 }
 
 export type CreateUserFormData = {
+    id: string;
     name: string;
     email: string;
     password: string;
