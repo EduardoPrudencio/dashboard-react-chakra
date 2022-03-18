@@ -1,15 +1,17 @@
-import { Box, Flex, Heading, Button, Icon, Text, Table, Thead, Th, Tr, Td, Checkbox, Tbody, useBreakpointValue, Spinner } from '@chakra-ui/react'
-import Link from 'next/link';
+import { Box, Flex, Heading, Button, Icon, Text, Table, Thead, Th, Tr, Td, Checkbox, Tbody, useBreakpointValue, Spinner, Link } from '@chakra-ui/react'
+import NextLink from 'next/link';
 import { useState } from 'react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import { Header } from '../../../components/Header';
 import { Pagination } from '../../../components/Pagination';
 import { Sidebar } from '../../../components/Sidebar';
+import { api } from '../../../services/api';
 import { useUsers } from '../../../services/hooks/useUsers';
+import { queryClient } from '../../../services/queryClient';
 
 export default function UserList(){
     const [page, setPage] = useState(1)
-    const { data, isLoading, isFetching, error } = useUsers()
+    const { data, isLoading, isFetching, error } = useUsers(page)
 
     console.log(page)
 
@@ -17,6 +19,16 @@ export default function UserList(){
         base:false,
         lg: true,
     })
+
+    async function hadlePrefetchUser(userId: number){
+        await queryClient.prefetchQuery(['user', userId], async () => {
+            const response = await api.get(`users/${userId}`)
+
+            return response.data;
+        },{
+            staleTime: 1000 * 60 * 10 //10
+        })
+    }
 
 
     return(
@@ -37,13 +49,13 @@ export default function UserList(){
                                      }
                                  </Heading>
 
-                                 <Link href="/dashboard/users/create" passHref>
+                                 <NextLink href="/dashboard/users/create" passHref>
                                     <Button as="a" 
                                             size="sm" 
                                             fontSize="sm"
                                             colorScheme="pink"
                                             leftIcon={<Icon as={RiAddLine} />}>Criar Novo</Button>
-                                </Link>
+                                </NextLink>
                     </Flex>
 
                   { isLoading ? (
@@ -68,7 +80,7 @@ export default function UserList(){
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {data.map( u => {
+                            {data.users.map( u => {
                                 return (
                                     <Tr key={u.id}>
                                         <Td px={["4","4","6"]}>
@@ -76,9 +88,11 @@ export default function UserList(){
                                         </Td>
                                         <Td>
                                             <Box>
-                                                <Text fontWeight="bold">
-                                                    {u.name}
-                                                </Text>
+                                                <Link color='purple.400' onMouseEnter={()=> hadlePrefetchUser(u.id)  }>
+                                                    <Text fontWeight="bold">
+                                                        {u.name}
+                                                    </Text>
+                                                </Link>
                                                 <Text fontSize="sm" color="gray.300">
                                                     {u.email}
                                                 </Text>
@@ -98,7 +112,7 @@ export default function UserList(){
                         </Tbody>
                     </Table>
 
-                    <Pagination totalCountRegisters={200} currentPage={page} onPageChange={setPage} />
+                    <Pagination totalCountRegisters={data.totalCount} currentPage={page} onPageChange={setPage} />
                         </>
                   )}
 
