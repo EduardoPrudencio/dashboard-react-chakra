@@ -1,35 +1,17 @@
 import { Box, Flex, Heading, Button, Icon, Text, Table, Thead, Th, Tr, Td, Checkbox, Tbody, useBreakpointValue, Spinner } from '@chakra-ui/react'
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useState } from 'react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import { Header } from '../../../components/Header';
 import { Pagination } from '../../../components/Pagination';
 import { Sidebar } from '../../../components/Sidebar';
-import { api } from '../../../services/api';
+import { useUsers } from '../../../services/hooks/useUsers';
 
 export default function UserList(){
+    const [page, setPage] = useState(1)
+    const { data, isLoading, isFetching, error } = useUsers()
 
-    const { data, isLoading, isFetching, error } = useQuery('users', async () => {
-        const { data } = await api.get('users')
-        
-        const users =  data.users.map( u => {
-            return {
-                id: u.id,
-                name: u.name,
-                email: u.email,
-                createdAt: new Date(u.createdAt).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                })
-            }
-        })
-
-        return users;
-    }, {
-        staleTime: 1000 * 5, //5 segundos
-    })
+    console.log(page)
 
     const isWidVersion = useBreakpointValue({
         base:false,
@@ -102,7 +84,7 @@ export default function UserList(){
                                                 </Text>
                                             </Box>
                                         </Td>
-                                        {isWidVersion && <Td>{u.createdAt}</Td>}
+                                        {isWidVersion && <Td>{u.creatAt}</Td>}
                                         <Td>
                                             <Button as="a" 
                                             size="sm" 
@@ -116,7 +98,7 @@ export default function UserList(){
                         </Tbody>
                     </Table>
 
-                    <Pagination />
+                    <Pagination totalCountRegisters={200} currentPage={page} onPageChange={setPage} />
                         </>
                   )}
 
