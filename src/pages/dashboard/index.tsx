@@ -3,8 +3,7 @@ import dynamic from 'next/dynamic'
 import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import { Sidebar } from "../../components/Sidebar";
 import { theme } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
-import { getUsers } from "../../services/hooks/useUsers";
+import {OnlyUserLoggedIn} from '../../components/OnlyLogged'
 
 const Chart = dynamic(() => import('react-apexcharts'),{ssr: false} )
 
@@ -49,9 +48,13 @@ const series = [
 ]
 
 export default function Dashboard(){
+    
+    OnlyUserLoggedIn();
+    
     return(
 
         <Flex direction="column" h="100vh">
+            
             <Header />
 
             <Flex w="100%" 

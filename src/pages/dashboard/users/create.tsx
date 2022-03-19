@@ -31,7 +31,7 @@ export default function CreateUser(){
     });
 
     const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm({
-        // resolver: yupResolver(CreateUserFormData)
+        //  resolver: yupResolver(CreateUserFormData)
     })
 
     const handleCreateUser: SubmitHandler<CreateUserFormData> = async (values) => {
