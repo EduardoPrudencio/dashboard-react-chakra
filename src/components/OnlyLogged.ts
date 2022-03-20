@@ -4,7 +4,7 @@ interface OnlyUserLoggedInProps {
     hole?: string;
 }
 
-export function OnlyUserLoggedIn({hole}: OnlyUserLoggedInProps){
+export function OnlyUserLoggedIn(){
     const userLogedIn = true;
     const reouter = useRouter()
 
